@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Home</title>
+    <title>Shop</title>
     <link rel="icon" type="image/svg+xml" href="assets/images/logo.svg" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
@@ -20,6 +20,24 @@
     />
 
     <link rel="stylesheet" href="assets/css/style.css" />
+
+    <style>
+      .product img {
+        width: 100%;
+        height: auto;
+        box-sizing: border-box;
+        object-fit: cover;
+      }
+
+      .pagination a {
+        color: coral;
+      }
+
+      .pagination li:hover a {
+        background-color: coral;
+        color: #fff;
+      }
+    </style>
   </head>
 
   <body>
@@ -66,87 +84,15 @@
       </div>
     </nav>
 
-    <!-- Home Section -->
-    <section id="home">
-      <div class="container">
-        <h5>NEW ARRIVALS</h5>
-        <h1><span>Best Prices</span> For This Season</h1>
-        <p>
-          E-Mart offers the best prices for this season.<br />Get the best deals
-          on our products.
-        </p>
-        <button>Shop Now</button>
-      </div>
-    </section>
-
-    <!-- Brands Section -->
-    <section id="brand" class="container">
-      <div class="row">
-        <img
-          class="img-fluid col-lg-3 col-md-6 col-sm-12"
-          src="assets/images/dior.png"
-          alt="Dior"
-        />
-        <img
-          class="img-fluid col-lg-3 col-md-6 col-sm-12"
-          src="assets/images/cartier.png"
-          alt="Cartier"
-        />
-        <img
-          class="img-fluid col-lg-3 col-md-6 col-sm-12"
-          src="assets/images/alo.png"
-          alt="Alo"
-        />
-        <img
-          class="img-fluid col-lg-3 col-md-6 col-sm-12"
-          src="assets/images/dyson.png"
-          alt="Dyson"
-        />
-      </div>
-    </section>
-
-    <!-- New Section -->
-    <section id="new" class="w-100">
-      <div class="row p-0 m-0">
-        <div class="one col-lg-4 col-md-12 col-sm-12 p-0">
-          <img class="img-fluid" src="assets/images/shoes.png" alt="Shoes" />
-          <div class="details">
-            <h2>Extreamly Awesome Shoes</h2>
-            <button>Shop Now</button>
-          </div>
-        </div>
-
-        <div class="one col-lg-4 col-md-12 col-sm-12 p-0">
-          <img
-            class="img-fluid"
-            src="assets/images/handbag.png"
-            alt="handbag"
-          />
-          <div class="details">
-            <h2>Extreamly Awesome Handbag</h2>
-            <button>Shop Now</button>
-          </div>
-        </div>
-
-        <div class="one col-lg-4 col-md-12 col-sm-12 p-0">
-          <img class="img-fluid" src="assets/images/watch.png" alt="Watch" />
-          <div class="details">
-            <h2>Extreamly Awesome Watch</h2>
-            <button>Shop Now</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Featured Section -->
-    <section id="feature" class="my-5 pb-5">
-      <div class="container text-center mt-5 py-5">
-        <h3>Our Featured Products</h3>
-        <hr class="mx-auto" />
-        <p>Here you can find our featured products.</p>
+    <!-- Products Section -->
+    <section id="feature" class="my-5 py-5">
+      <div class="container mt-5 py-5">
+        <h3>Our Products</h3>
+        <hr />
+        <p>Here you can find our products.</p>
       </div>
 
-      <div class="row mx-auto container-fluid">
+      <div class="row mx-auto container">
         <div class="product text-center col-lg-3 col-md-4 col-sm-12">
           <img
             class="img-fluid mb-3"
@@ -218,27 +164,7 @@
           <h4 class="p-price">$199.9</h4>
           <button class="buy-btn">Buy Now</button>
         </div>
-      </div>
-    </section>
 
-    <!-- Mid Banner -->
-    <section id="banner" class="my-5 py-5">
-      <div class="container">
-        <h4>SUMMER SALE IS HERE</h4>
-        <h1>Get the best deals <br />on our products.</h1>
-        <button>Shop Now</button>
-      </div>
-    </section>
-
-    <!-- Clothes Section -->
-    <section id="clothes" class="my-5 pb-5">
-      <div class="container text-center mt-5 py-5">
-        <h3>Casual Wears & Jackets</h3>
-        <hr class="mx-auto" />
-        <p>Here you can find our casual wears and jackets.</p>
-      </div>
-
-      <div class="row mx-auto container-fluid">
         <div class="product text-center col-lg-3 col-md-4 col-sm-12">
           <img
             class="img-fluid mb-3"
@@ -310,18 +236,7 @@
           <h4 class="p-price">$199.9</h4>
           <button class="buy-btn">Buy Now</button>
         </div>
-      </div>
-    </section>
 
-    <!-- Shoes Section -->
-    <section id="shoes" class="my-5 pb-5">
-      <div class="container text-center mt-5 py-5">
-        <h3>Shoes & Sneakers</h3>
-        <hr class="mx-auto" />
-        <p>Here you can find our shoes and sneakers.</p>
-      </div>
-
-      <div class="row mx-auto container-fluid">
         <div class="product text-center col-lg-3 col-md-4 col-sm-12">
           <img
             class="img-fluid mb-3"
@@ -393,18 +308,7 @@
           <h4 class="p-price">$199.9</h4>
           <button class="buy-btn">Buy Now</button>
         </div>
-      </div>
-    </section>
 
-    <!-- Watches Section -->
-    <section id="watches" class="my-5 pb-5">
-      <div class="container text-center mt-5 py-5">
-        <h3>Wrist Watches</h3>
-        <hr class="mx-auto" />
-        <p>Here you can find our wrist watches.</p>
-      </div>
-
-      <div class="row mx-auto container-fluid">
         <div class="product text-center col-lg-3 col-md-4 col-sm-12">
           <img
             class="img-fluid mb-3"
@@ -476,6 +380,30 @@
           <h4 class="p-price">$199.9</h4>
           <button class="buy-btn">Buy Now</button>
         </div>
+
+        <nav aria-label="Page navigation example">
+          <ul class="pagination mt-5">
+            <li class="page-item">
+              <a class="page-link" href="#">Previous</a>
+            </li>
+
+            <li class="page-item">
+              <a class="page-link" href="#">1</a>
+            </li>
+
+            <li class="page-item">
+              <a class="page-link" href="#">2</a>
+            </li>
+
+            <li class="page-item">
+              <a class="page-link" href="#">3</a>
+            </li>
+
+            <li class="page-item">
+              <a class="page-link" href="#">Next</a>
+            </li>
+          </ul>
+        </nav>
       </div>
     </section>
 
