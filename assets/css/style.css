@@ -318,7 +318,7 @@ footer .copyright img {
   width: 30%;
 }
 
-/* Single Product */
+/* Single Product Page */
 
 .small-img-group {
   display: flex;
@@ -352,7 +352,7 @@ footer .copyright img {
   background-color: #222222;
 }
 
-/* Cart */
+/* Cart Page */
 .cart table {
   width: 100%;
   border-collapse: collapse;
@@ -439,4 +439,128 @@ th:last-child {
 
 .checkout-btn:hover {
   background-color: #222222;
+}
+
+/* Login Page */
+
+#login-form {
+  width: 50%;
+  margin: 5px auto;
+  text-align: center;
+  padding: 20px;
+  border-top: 1px solid coral;
+}
+
+#login-form input {
+  width: 50%;
+  margin: 5px auto;
+}
+
+#login-form #login-btn {
+  width: 50%;
+  margin: 5px auto;
+  background-color: coral;
+  color: #fff;
+}
+
+#login-form #login-btn:hover {
+  background-color: #222222;
+}
+
+#login-form #register-url {
+  color: coral;
+  text-decoration: none;
+}
+
+/* Register Page */
+
+#register-form {
+  width: 50%;
+  margin: 5px auto;
+  text-align: center;
+  padding: 20px;
+  border-top: 1px solid coral;
+}
+
+#register-form input {
+  width: 50%;
+  margin: 5px auto;
+}
+
+#register-form #register-btn {
+  width: 50%;
+  margin: 5px auto;
+  background-color: coral;
+  color: #fff;
+}
+
+#register-form #register-btn:hover {
+  background-color: #222222;
+}
+
+#register-form #register-url {
+  color: coral;
+  text-decoration: none;
+}
+
+/* Account Page */
+#account-form {
+  width: 50%;
+  margin: 35px auto;
+  text-align: center;
+  padding: 20px;
+}
+
+#account-form input {
+  margin: 5px auto;
+}
+
+#account-form #change-password-btn {
+  width: 100%;
+  margin: 5px auto;
+  background-color: coral;
+  color: #fff;
+}
+
+#account-form #change-password-btn:hover {
+  background-color: #222222;
+}
+
+.account-info #order-btn,
+#logout-btn {
+  color: coral;
+  text-decoration: none;
+}
+
+/* Orders Section */
+.orders table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.orders .product-info {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.orders th {
+  text-align: left;
+  padding: 5px 10px;
+  color: white;
+  background-color: coral;
+  text-align: left;
+}
+
+.orders th:nth-child(2) {
+  text-align: right;
+}
+
+.orders td {
+  padding: 10px 20px;
+}
+
+.orders td img {
+  width: 80px;
+  height: 80px;
+  margin-right: 10px;
 }

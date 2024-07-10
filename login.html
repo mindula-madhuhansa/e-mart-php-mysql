@@ -66,107 +66,49 @@
       </div>
     </nav>
 
-    <!-- Cart -->
-    <section class="cart container my-5 py-5">
-      <div class="container mt-5">
-        <h2 class="font-weight-bold">Your Cart</h2>
-        <hr />
+    <!-- Login -->
+    <section class="my-5 py-5">
+      <div class="container text-center mt-3 pt-5">
+        <h2 class="font-weight-bold">Login</h2>
+        <hr class="mx-auto"/ >
       </div>
 
-      <table class="mt-5 pt-5">
-        <tr>
-          <th>Product</th>
-          <th>Quantity</th>
-          <th>Total</th>
-        </tr>
-        <tr>
-          <td>
-            <div class="product-info">
-              <img src="assets/images/clothes2.png" alt="Product 1" />
-              <div>
-                <p>Crop Top - Long Sleeve</p>
-                <small><span>$</span>199.9</small>
-                <br />
-                <a href="#" class="remove-btn">Remove</a>
-              </div>
-            </div>
-          </td>
+      <div class="mx-auto container">
+        <form id="login-form">
+          <div class="form-group">
+            <label for="login-email">Email</label>
+            <input
+              type="email"
+              class="form-control"
+              id="login-email"
+              name="email"
+              placeholder="Enter your email"
+              required
+            />
+          </div>
 
-          <td>
-            <input type="number" value="1" />
-            <a href="#" class="edit-btn">Edit</a>
-          </td>
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <input
+              type="password"
+              class="form-control"
+              id="login-password"
+              name="password"
+              placeholder="Enter your password"
+              required
+            />
+          </div>
 
-          <td>
-            <span>$</span>
-            <span class="product-price">199.9</span>
-          </td>
-        </tr>
+          <div class="form-group">
+            <button type="submit" id="login-btn">Login</button>
+          </div>
 
-        <tr>
-          <td>
-            <div class="product-info">
-              <img src="assets/images/clothes2.png" alt="Product 1" />
-              <div>
-                <p>Crop Top - Long Sleeve</p>
-                <small><span>$</span>199.9</small>
-                <br />
-                <a href="#" class="remove-btn">Remove</a>
-              </div>
-            </div>
-          </td>
-
-          <td>
-            <input type="number" value="1" />
-            <a href="#" class="edit-btn">Edit</a>
-          </td>
-
-          <td>
-            <span>$</span>
-            <span class="product-price">199.9</span>
-          </td>
-        </tr>
-
-        <tr>
-          <td>
-            <div class="product-info">
-              <img src="assets/images/clothes2.png" alt="Product 1" />
-              <div>
-                <p>Crop Top - Long Sleeve</p>
-                <small><span>$</span>199.9</small>
-                <br />
-                <a href="#" class="remove-btn">Remove</a>
-              </div>
-            </div>
-          </td>
-
-          <td>
-            <input type="number" value="1" />
-            <a href="#" class="edit-btn">Edit</a>
-          </td>
-
-          <td>
-            <span>$</span>
-            <span class="product-price">199.9</span>
-          </td>
-        </tr>
-      </table>
-
-      <div class="cart-total">
-        <table>
-          <tr>
-            <td>Subtotal</td>
-            <td>$599.7</td>
-          </tr>
-          <tr>
-            <td>Total</td>
-            <td>$599.7</td>
-          </tr>
-        </table>
-      </div>
-
-      <div class="checkout-container">
-        <button class="checkout-btn">Checkout</button>
+          <div class="form-group">
+            <a id="register-url" href="register.html">
+              Don't have an account? Register</a
+            >
+          </div>
+        </form>
       </div>
     </section>
 
