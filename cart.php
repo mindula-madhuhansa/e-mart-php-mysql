@@ -1,20 +1,86 @@
 <?php
 
-include('server/connection.php');
+session_start();
 
-if (isset($_GET['product_id'])) {
-  $product_id = $_GET['product_id'];
+if (isset($_POST['add_to_cart'])) {
+  if (isset($_SESSION['cart'])) {
+    $product_array_ids = array_column($_SESSION['cart'], 'product_id');
 
-  $stmt = $conn->prepare("SELECT * FROM products WHERE product_id = ?");
-  $stmt->bind_param("i", $product_id);
+    if (!in_array($_POST['product_id'], $product_array_ids)) {
 
-  $stmt->execute();
+      $product_id = $_POST['product_id'];
 
-  $product = $stmt->get_result();
+      $product_array = array(
+        'product_id' => $_POST['product_id'],
+        'product_image' =>  $_POST['product_image'],
+        'product_name' => $_POST['product_name'],
+        'product_price' => $_POST['product_price'],
+        'product_quantity' => $_POST['product_quantity'],
+      );
+
+      $_SESSION['cart'][$product_id] = $product_array;
+    } else {
+      echo "<script>alert('Product is already added to the cart');</script>";
+    }
+  } else {
+    $product_id = $_POST['product_id'];
+
+    $product_id = $_POST['product_id'];
+    $product_name = $_POST['product_name'];
+    $product_image = $_POST['product_image'];
+    $product_price = $_POST['product_price'];
+    $product_quantity = $_POST['product_quantity'];
+
+
+    $product_array = array(
+      'product_id' => $product_id,
+      'product_image' => $product_image,
+      'product_name' => $product_name,
+      'product_price' => $product_price,
+      'product_quantity' => $product_quantity,
+    );
+
+    $_SESSION['cart'][$product_id] = $product_array;
+  }
+
+  calculateTotal();
+} elseif (isset($_POST['remove_product'])) {
+  $product_id = $_POST['product_id'];
+  unset($_SESSION['cart'][$product_id]);
+
+  calculateTotal();
+} elseif (isset($_POST['edit_quantity'])) {
+  $product_id = $_POST['product_id'];
+  $product_quantity = $_POST['product_quantity'];
+
+  $product_array = $_SESSION['cart'][$product_id];
+  $product_array['product_quantity'] = $product_quantity;
+
+  $_SESSION['cart'][$product_id] = $product_array;
+
+  calculateTotal();
 } else {
   header('location: index.php');
 }
+
+function calculateTotal()
+{
+  $total = 0;
+
+  foreach ($_SESSION['cart'] as $key => $value) {
+    $product = $_SESSION['cart'][$key];
+
+    $price = $product['product_price'];
+    $quantity = $product['product_quantity'];
+
+    $total = $total + ($price * $quantity);
+  }
+
+  $_SESSION['total'] = $total;
+}
+
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -24,7 +90,6 @@ if (isset($_GET['product_id'])) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Shop</title>
   <link rel="icon" type="image/svg+xml" href="assets/images/logo.svg" />
-
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
 
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous" />
@@ -66,80 +131,74 @@ if (isset($_GET['product_id'])) {
     </div>
   </nav>
 
-  <!-- Single Product Details -->
-  <section class="container single-product my-5 pt-5">
-    <div class="row mt-5">
-
-      <?php while ($row = $product->fetch_assoc()) { ?>
-        <div class="col-lg-5 col-md-6 col-sm-12">
-          <img id="mainImg" src="assets/images/<?php echo $row['product_image']; ?>" alt="<?php echo $row['product_name']; ?>" class="img-fluid w-100 pb-1" />
-          <div class="small-img-group">
-            <div class="small-img-col">
-              <img src="assets/images/<?php echo $row['product_image']; ?>" alt="<?php echo $row['product_name']; ?>" width="100%" class="small-img" />
-            </div>
-            <div class="small-img-col">
-              <img src="assets/images/<?php echo $row['product_image2']; ?>" alt="<?php echo $row['product_name']; ?>" width="100%" class="small-img" />
-            </div>
-            <div class="small-img-col">
-              <img src="assets/images/<?php echo $row['product_image3']; ?>" alt="<?php echo $row['product_name']; ?>" width="100%" class="small-img" />
-            </div>
-            <div class="small-img-col">
-              <img src="assets/images/<?php echo $row['product_image4']; ?>" alt="<?php echo $row['product_name']; ?>" width="100%" class="small-img" />
-            </div>
-          </div>
-        </div>
-
-
-        <div class="col-lg-6 col-md-12 col-sm-12">
-          <h6 class="text-capitalize"><?php echo $row['product_category']; ?></h6>
-          <h3 class="py-4"><?php echo $row['product_name']; ?></h3>
-          <h2>$<?php echo $row['product_price']; ?></h2>
-
-          <form method="POST" action="cart.php">
-            <input type="hidden" name="product_id" value="<?php echo $row['product_id']; ?>" />
-            <input type="hidden" name="product_image" value="<?php echo $row['product_image']; ?>" />
-            <input type="hidden" name="product_name" value="<?php echo $row['product_name']; ?>" />
-            <input type="hidden" name="product_price" value="<?php echo $row['product_price']; ?>" />
-            <input type="number" name="product_quantity" value="1" />
-            <button class="buy-btn" type="submit" name="add_to_cart">Add to Cart</button>
-          </form>
-
-          <h4 class="my-5">Product Details</h4>
-          <span>
-            <?php echo $row['product_description']; ?>
-          </span>
-        </div>
-      <?php } ?>
-    </div>
-  </section>
-
-  <!-- Featured Section -->
-  <section id="featured" class="my-5 pb-5">
-    <div class="container text-center mt-5 py-5">
-      <h3>Our Featured Products</h3>
-      <hr class="mx-auto" />
-      <p>Here you can find our featured products.</p>
+  <!-- Cart -->
+  <section class="cart container my-5 py-5">
+    <div class="container mt-5">
+      <h2 class="font-weight-bold">Your Cart</h2>
+      <hr />
     </div>
 
-    <div class="row mx-auto container-fluid">
-      <?php include("server/get_featured_products.php"); ?>
+    <table class="mt-5 pt-5">
+      <tr>
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Total</th>
+      </tr>
 
-      <?php while ($row = $featured_products->fetch_assoc()) { ?>
-        <div class="product text-center col-lg-3 col-md-4 col-sm-12">
-          <img class="img-fluid mb-3" src="assets/images/<?php echo $row["product_image"]; ?>" alt="<?php echo $row["product_name"]; ?>" />
-          <div class="star">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-          </div>
-          <h5 class="p-name"><?php echo $row['product_name'] ?></h5>
-          <h4 class="p-price">$<?php echo $row['product_price'] ?></h4>
-          <a href="<?php echo "single_product.php?product_id=" . $row['product_id']; ?>"><button class="buy-btn">Buy Now</button></a>
-        </div>
+      <?php foreach ($_SESSION['cart'] as $key => $value) { ?>
+        <tr>
+          <td>
+            <div class="product-info">
+              <img src="assets/images/<?php echo $value['product_image']; ?>" alt="<?php echo $value['product_name']; ?>" />
+              <div>
+                <p>
+                  <?php echo $value['product_name']; ?>
+                </p>
+                <small><span>$</span><?php echo $value['product_price']; ?></small>
+                <br />
+                <form method="POST" action="cart.php">
+                  <input type="hidden" name="product_id" value="<?php echo $value['product_id']; ?>" />
+                  <input type="submit" name="remove_product" class="remove-btn" value="Remove" />
+                </form>
+              </div>
+            </div>
+          </td>
 
+          <td>
+            <form method="POST" action="cart.php">
+              <input type="hidden" name="product_id" value="<?php echo $value['product_id']; ?>" />
+              <input type="number" name="product_quantity" value="<?php echo $value['product_quantity']; ?>" />
+              <input type="submit" name="edit_quantity" class="edit-btn" value="Edit" />
+            </form>
+          </td>
+
+          <td>
+            <span>$</span>
+            <span class="product-price">
+              <?php echo $value['product_price'] * $value['product_quantity']; ?>
+            </span>
+          </td>
+        </tr>
       <?php } ?>
+
+    </table>
+
+    <div class="cart-total">
+      <table>
+        <!-- <tr>
+          <td>Subtotal</td>
+          <td>$ 99.99
+          </td>
+        </tr> -->
+        <tr>
+          <td>Total</td>
+          <td>$ <?php echo $_SESSION['total']; ?></td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="checkout-container">
+      <button class="checkout-btn">Checkout</button>
     </div>
   </section>
 
@@ -212,17 +271,6 @@ if (isset($_GET['product_id'])) {
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-
-  <script>
-    var mainImg = document.getElementById("mainImg");
-    var smallImg = document.getElementsByClassName("small-img");
-
-    for (let i = 0; i < 4; i++) {
-      smallImg[i].onclick = function() {
-        mainImg.src = smallImg[i].src;
-      };
-    }
-  </script>
 </body>
 
 </html>

@@ -394,12 +394,18 @@ footer .copyright img {
   color: coral;
   text-decoration: none;
   font-size: 14px;
+  background-color: transparent;
+  border: none;
+  width: fit-content;
 }
 
 .cart .edit-btn {
   color: coral;
   text-decoration: none;
   font-size: 15px;
+  background-color: transparent;
+  border: none;
+  width: fit-content;
 }
 
 .cart .product-info p {
