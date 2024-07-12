@@ -2,6 +2,11 @@
 
 session_start();
 
+if (isset($_POST['order_pay_btn'])) {
+    $order_status = $_POST['order_status'];
+    $order_total_price = $_POST['order_total_price'];
+}
+
 ?>
 
 <?php include("layouts/header.php"); ?>
@@ -14,9 +19,20 @@ session_start();
     </div>
 
     <div class="mx-auto container text-center">
-        <p><?php echo $_GET['order_status']; ?></p>
-        <p>Total payment: $ <?php echo $_SESSION['total']; ?></p>
-        <button type="submit">Pay Now</button>
+        <?php if (isset($_SESSION['total']) && $_SESSION['total'] != 0) { ?>
+            <p>Total payment: $<?php echo $_SESSION['total']; ?></p>
+            <button type="submit">Pay Now</button>
+
+
+        <?php } elseif (isset($_POST['order_status']) && $_POST['order_status'] == "Not Paid") { ?>
+            <p>Total payment: $ <?php echo $order_total_price; ?></p>
+            <button type="submit">Pay Now</button>
+        <?php } else { ?>
+            <p>Your cart is empty</p>
+        <?php } ?>
+
+
+
     </div>
 </section>
 
