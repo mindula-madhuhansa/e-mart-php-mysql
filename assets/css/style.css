@@ -547,28 +547,40 @@ th:last-child {
 .orders .product-info {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
 }
 
 .orders th {
-  text-align: left;
   padding: 5px 10px;
   color: white;
   background-color: coral;
-  text-align: left;
-}
-
-.orders th:nth-child(2) {
-  text-align: right;
 }
 
 .orders td {
   padding: 10px 20px;
 }
 
+.orders td input {
+  background-color: transparent;
+  border: none;
+  color: coral;
+  width: fit-content;
+}
+
 .orders td img {
   width: 80px;
   height: 80px;
   margin-right: 10px;
+}
+
+.pay_now_btn {
+  background-color: coral;
+  color: #fff;
+  text-decoration: none;
+}
+
+.pay_now_btn:hover {
+  background-color: #222222;
 }
 
 /* Checkout Page */
