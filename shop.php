@@ -1,64 +1,23 @@
 <?php
-session_start();
 
 include("server/connection.php");
 
-if (!isset($_SESSION['logged_in'])) {
-  header("location: login.php");
-  exit();
-}
+if (isset($_POST['search'])) {
+  $category = $_POST['category'];
+  $price = $_POST['price'];
 
-if (isset($_GET['logout'])) {
-  if (isset($_SESSION['logged_in'])) {
-    unset($_SESSION['logged_in']);
-    unset($_SESSION['user_name']);
-    unset($_SESSION['user_email']);
-    header("location: login.php");
-    exit();
-  }
-}
-
-if (isset($_POST['change_password'])) {
-  $password = ($_POST['password']);
-  $confirm_password = ($_POST['confirm_password']);
-  $email = $_SESSION['user_email'];
-
-
-  // check if password matches
-  if ($password !== $confirm_password) {
-    header("location: account.php?error=Password does not match");
-  }
-
-  // check if password is at least 6 characters long
-  elseif (strlen($password) < 6) {
-    header("location: account.php?error=Password must be at least 6 characters long");
-  } else {
-    $stmt = $conn->prepare("UPDATE users SET user_password = ? WHERE user_email = ?");
-
-    $stmt->bind_param("ss", md5($password), $email);
-
-    if ($stmt->execute()) {
-      header("location: account.php?message=Password changed successfully");
-    } else {
-      header("location: account.php?error=Could not change password. Please try again later");
-    }
-  }
-}
-
-// get orders
-if (isset($_SESSION['logged_in'])) {
-  $user_id = $_SESSION['user_id'];
-
-  $stmt = $conn->prepare("SELECT * FROM orders WHERE user_id = ?");
-
-  $stmt->bind_param("i", $_SESSION['user_id']);
-
+  $stmt = $conn->prepare("SELECT * FROM products WHERE product_category = ? AND product_price <= ?");
+  $stmt->bind_param("si", $category, $price);
   $stmt->execute();
-
-  $orders = $stmt->get_result();
+  $products = $stmt->get_result();
+} else {
+  $stmt = $conn->prepare("SELECT * FROM products");
+  $stmt->execute();
+  $products = $stmt->get_result();
 }
 
 ?>
+
 
 
 <!DOCTYPE html>
@@ -74,6 +33,24 @@ if (isset($_SESSION['logged_in'])) {
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous" />
 
   <link rel="stylesheet" href="assets/css/style.css" />
+
+  <style>
+    .product img {
+      width: 100%;
+      height: auto;
+      box-sizing: border-box;
+      object-fit: cover;
+    }
+
+    .pagination a {
+      color: coral;
+    }
+
+    .pagination li:hover a {
+      background-color: coral;
+      color: #fff;
+    }
+  </style>
 </head>
 
 <body>
@@ -110,94 +87,93 @@ if (isset($_SESSION['logged_in'])) {
     </div>
   </nav>
 
-  <!-- Account-->
-  <section class="my-5 py-5">
-    <div class="container row mx-auto">
-      <div class="text-center mt-3 pt-5 col-lg-6 col-md-12 col-sm-12">
-        <p class="text-center" style="color: green;"><?php if (isset($_GET['register_success'])) echo $_GET['register_success']; ?></p>
-        <p class="text-center" style="color: green;"><?php if (isset($_GET['login_success'])) echo $_GET['login_success']; ?></p>
-        <h3 class="font-weight-bold">Account Info</h3>
-        <hr class="mx-auto" />
-
-        <div class="account-info">
-          <p>Name: <span><?php if (isset($_SESSION['user_name'])) echo $_SESSION['user_name']; ?></span></p>
-          <p>Email: <span><?php if (isset($_SESSION['user_email'])) echo $_SESSION['user_email']; ?></span></p>
-          <p><a href="#orders" id="order-btn">Your orders</a></p>
-          <p><a href="account.php?logout=1" id="logout-btn">Logout</a></p>
+  <!-- Main Section -->
+  <section id="main" class="container py-5 mt-5">
+    <div class="row">
+      <!-- Search Section -->
+      <div id="search" class="col-lg-3 col-md-4 col-sm-12">
+        <div class="mt-5 py-5">
+          <p>Search Products</p>
+          <hr />
         </div>
-      </div>
-
-      <div class="col-lg-6 col-md-12 col-sm-12">
-        <form id="account-form" method="POST" action="account.php">
-          <p class="text-center" style="color: red;"><?php if (isset($_GET['error'])) echo $_GET['error']; ?></p>
-          <p class="text-center" style="color: green;"><?php if (isset($_GET['message'])) echo $_GET['message']; ?></p>
-          <h3>Change password</h3>
-          <hr class="mx-auto" />
-          <div class="form-group">
-            <label for="account-password">Password</label>
-            <input type="password" class="form-control" id="account-password" name="password" placeholder="Enter your new password" required />
+        <form method="POST" action="shop.php">
+          <div class="mb-4">
+            <p>Category</p>
+            <div class="form-check">
+              <input class="form-check-input" value="casual" type="radio" name="category" id="category_one" checked />
+              <label class="form-check-label" for="category_one">Casual Wears</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" value="shoes" type="radio" name="category" id="category_two" />
+              <label class="form-check-label" for="category_two">Shoes</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" value="watches" type="radio" name="category" id="category_three" />
+              <label class="form-check-label" for="category_three">Watches</label>
+            </div>
           </div>
-
-          <div class="form-group">
-            <label for="account-confirm-password">Confirm Password</label>
-            <input type="password" class="form-control" id="account-confirm-password" name="confirm_password" placeholder="Confirm your new password" required />
+          <div class="mb-4">
+            <p>Price Range</p>
+            <input type="range" name="price" class="form-range" value="100" min="1" max="1000" id="customRange2" />
+            <div class="d-flex justify-content-between">
+              <span>1</span>
+              <span>1000</span>
+            </div>
           </div>
-
-          <div class="form-group">
-            <button type="submit" name="change_password" id="change-password-btn">
-              Change Password
+          <div class="form-group my-3">
+            <button type="submit" name="search">
+              Search
             </button>
           </div>
         </form>
       </div>
+
+      <!-- Products Section -->
+      <div id="feature" class="col-lg-9 col-md-8 col-sm-12 my-5 py-5">
+        <div class="container">
+          <h3>Our Products</h3>
+          <hr />
+          <p>Here you can find our products.</p>
+        </div>
+
+        <div class="row">
+          <?php while ($row = $products->fetch_assoc()) { ?>
+            <div onclick="window.location.href='single_product.php?product_id=<?php echo $row['product_id'] ?>;'" class="product text-center col-lg-3 col-md-4 col-sm-12">
+              <img class="img-fluid mb-3" src="assets/images/<?php echo $row['product_image']; ?>" alt="<?php echo $row['product_name']; ?>" />
+              <div class="star">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+              </div>
+              <h5 class="p-name"><?php echo $row['product_name']; ?></h5>
+              <h4 class="p-price">$<?php echo $row['product_price']; ?></h4>
+            </div>
+          <?php } ?>
+
+          <nav aria-label="Page navigation example" class="mt-4">
+            <ul class="pagination justify-content-center">
+              <li class="page-item">
+                <a class="page-link" href="#">Previous</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="#">1</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="#">2</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="#">3</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
     </div>
-  </section>
-
-  <!-- Orders Section -->
-  <section id="orders" class="orders container my-5 py-3">
-    <div class="container mt-2">
-      <h2 class="text-center font-weight-bold">Your Orders</h2>
-      <hr class="mx-auto" />
-    </div>
-
-    <table class="mt-5 pt-5">
-      <tr>
-        <th>Order ID</th>
-        <th>Order Cost</th>
-        <th>Order Status</th>
-        <th>Order Date</th>
-        <th>Order Details</th>
-      </tr>
-
-      <?php while ($order = $orders->fetch_assoc()) { ?>
-        <tr>
-          <td>
-            <span><?php echo $order['order_id']; ?></span>
-          </td>
-
-          <td>
-            <span>$<?php echo $order['order_cost']; ?></span>
-          </td>
-
-          <td>
-            <span><?php echo $order['order_status']; ?></span>
-          </td>
-
-          <td>
-            <span> <?php echo $order['order_date']; ?></span>
-          </td>
-
-          <td>
-            <form method="POST" action="order_details.php">
-              <input type="hidden" name="order_id" value="<?php echo $order['order_id']; ?>" />
-              <input type="hidden" name="order_status" value="<?php echo $order['order_status']; ?>" />
-              <input type="submit" name="order_details_btn" value="View" />
-            </form>
-          </td>
-        </tr>
-      <?php } ?>
-
-    </table>
   </section>
 
   <!-- Footer -->
